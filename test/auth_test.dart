@@ -49,10 +49,101 @@ void main() {
           .login(inputLogin: LoginInput(email: email, password: password));
       expect(loginSuccessful, true);
     });
+    test("Login is failed when the data for the request is unauthenticated",
+        () async {
+      final dio = MockDio();
+      Map<String, dynamic> data = {
+        "email": "its@nusantarainfrastructure.com",
+        "password": "HelloWorld"
+      };
+
+      when(dio.post('https://msib-6-test-7uaujedvyq-et.a.run.app/api/login',
+              data: data))
+          .thenAnswer((_) async {
+        final response = Response<dynamic>(
+          data: {"message": "invalid credentials"},
+          statusCode: 401,
+          requestOptions: RequestOptions(
+              path: 'https://msib-6-test-7uaujedvyq-et.a.run.app/api/login'),
+        );
+
+        print(response.data);
+
+        return Future.value(response);
+      });
+
+      String email = data['email'];
+      String password = data['password'];
+      bool loginSuccessful = await AuthService(dio: dio)
+          .login(inputLogin: LoginInput(email: email, password: password));
+      expect(loginSuccessful, false);
+    });
+    test("Login is failed when the email is empty", () async {
+      final dio = MockDio();
+      Map<String, dynamic> data = {"email": "", "password": "HelloWorld"};
+
+      when(dio.post('https://msib-6-test-7uaujedvyq-et.a.run.app/api/login',
+              data: data))
+          .thenAnswer((_) async {
+        final response = Response<dynamic>(
+          data: {
+            "message": "The email field is required.",
+            "errors": {
+              "email": ["The email field is required."]
+            }
+          },
+          statusCode: 422,
+          requestOptions: RequestOptions(
+              path: 'https://msib-6-test-7uaujedvyq-et.a.run.app/api/login'),
+        );
+
+        print(response.data);
+
+        return Future.value(response);
+      });
+
+      String email = data['email'];
+      String password = data['password'];
+      bool loginSuccessful = await AuthService(dio: dio)
+          .login(inputLogin: LoginInput(email: email, password: password));
+      expect(loginSuccessful, false);
+    });
+    test("Login is failed when the password is empty", () async {
+      final dio = MockDio();
+      Map<String, dynamic> data = {"email": "aaa", "password": ""};
+
+      when(dio.post('https://msib-6-test-7uaujedvyq-et.a.run.app/api/login',
+              data: data))
+          .thenAnswer((_) async {
+        final response = Response<dynamic>(
+          data: {
+            "message": "The email field is required.",
+            "errors": {
+              "email": ["The email field is required."]
+            }
+          },
+          statusCode: 422,
+          requestOptions: RequestOptions(
+              path: 'https://msib-6-test-7uaujedvyq-et.a.run.app/api/login'),
+        );
+
+        print(response.data);
+
+        return Future.value(response);
+      });
+
+      String email = data['email'];
+      String password = data['password'];
+      bool loginSuccessful = await AuthService(dio: dio)
+          .login(inputLogin: LoginInput(email: email, password: password));
+      expect(loginSuccessful, false);
+    });
   });
   group("Register", () {
     test("Register is successfull when the data pass all of the requirement ",
-        () {});
+        () {
+          
+        });
     test(
         "Register is failed when the data doesn't pass all of the requirement ",
         () {});
