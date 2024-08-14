@@ -1,40 +1,46 @@
 import 'package:dio/dio.dart';
-import 'package:montra/app/constant/dio_constant.dart';
 import 'package:montra/app/data/model/input/auth/login_input.dart';
 import 'package:montra/app/data/model/input/auth/register_input.dart';
 
+import '../../constant/dio_constant.dart';
+
 class AuthService {
-  Future<bool> login({required LoginInput inputRegister}) async {
-    try{
-      Map<String,dynamic> data = {
-        'email' : inputRegister.email,
-        'password': inputRegister.password,
+  late Dio dio;
+  AuthService({Dio? dio}) {
+    this.dio = dio ?? Dio();
+  }
+  Future<bool> login({required LoginInput inputLogin}) async {
+    try {
+      Map<String, dynamic> data = {
+        'email': inputLogin.email,
+        'password': inputLogin.password,
       };
-      Response response = await dio.post('/login', data: data);
+      Response response = await dio.post('$url/login', data: data);
       bool isSuccessRegister = response.statusCode == 200;
-      if(isSuccessRegister) {
+      if (isSuccessRegister) {
         return true;
       }
       return false;
-    }catch(e) {
+    } catch (e) {
       return false;
     }
   }
+
   Future<bool> register({required RegisterInput inputRegister}) async {
-    try{
-      Map<String,dynamic> data = {
-        'name' : inputRegister.name,
-        'email' : inputRegister.email,
+    try {
+      Map<String, dynamic> data = {
+        'name': inputRegister.name,
+        'email': inputRegister.email,
         'password': inputRegister.password,
         'password_confirmation': inputRegister.passwordConfirmation
       };
       Response response = await dio.post('/register', data: data);
       bool isSuccessRegister = response.statusCode == 200;
-      if(isSuccessRegister) {
+      if (isSuccessRegister) {
         return true;
       }
       return false;
-    }catch(e) {
+    } catch (e) {
       return false;
     }
   }
