@@ -38,7 +38,6 @@ class WalletService {
       dio.options.headers['Authorization'] =
           'Bearer ${GetStorage().read('token')}';
       final response = await dio.get('$url/wallet/$id');
-      print(response.data);
       if (response.statusCode == 200) {
         final Wallet wallet = Wallet.fromJson(response.data);
         return wallet;

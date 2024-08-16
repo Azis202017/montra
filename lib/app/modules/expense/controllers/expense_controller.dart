@@ -45,7 +45,6 @@ class ExpenseController extends GetxController {
 
   void category() async {
     listCategory = await CategoryService().category();
-    print(listCategory);
     isLoading = false;
     update();
   }

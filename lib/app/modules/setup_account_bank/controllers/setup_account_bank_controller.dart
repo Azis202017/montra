@@ -21,19 +21,19 @@ class SetupAccountBankController extends GetxController {
 
   @override
   onInit() {
-    if (id != null) {
-      fetchDetailId();
-    }
+    fetchDetailId();
+    if (id != null) {}
     isLoading = false;
     super.onInit();
   }
 
   void fetchDetailId() async {
-    print(id);
-    id ??= Get.arguments['id'];
-    wallet = await WalletService().fetchDetailWallet(id: id);
-    if (wallet != null) {
-      nameWallet.text = wallet?.name ?? "";
+    if (id == null) {
+      id = Get.arguments['id'];
+      wallet = await WalletService().fetchDetailWallet(id: id);
+      if (wallet != null) {
+        nameWallet.text = wallet?.name ?? "";
+      }
     }
     isLoading = false;
     update();
