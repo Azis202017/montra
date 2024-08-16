@@ -13,4 +13,4 @@ BaseOptions options = BaseOptions(
     return false;
   }
 );
-Dio dio = Dio(options);
+

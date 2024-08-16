@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../data/model/expense_model.dart';
+import '../../../shared/theme/colors.dart';
+import '../../../shared/theme/font.dart';
+import '../../splash/views/splash_view.dart';
 import '../controllers/home_controller.dart';
 import 'package:intl/intl.dart';
 
@@ -13,56 +16,84 @@ class HomeView extends GetView<HomeController> {
     final RxString selectedFilter = "Hari Ini".obs; // Filter default
     String? previousDay;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('HomeView'),
-        centerTitle: true,
-      ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return SafeArea(
+      child: Scaffold(
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        if (controller.expenses.isEmpty) {
+          if (controller.expenses.isEmpty) {
+            return RefreshIndicator(
+              onRefresh: () async => controller.fetchExpenses(),
+              child: const SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomImageAsset(
+                        image: "onboarding1",
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Text('No expenses found, add new with bottom red button'),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+
+          // Dapatkan daftar pengeluaran yang sudah difilter
+          List<Expense> filteredExpenses =
+              _filterExpensesByDate(selectedFilter.value);
+
+          // Kelompokkan pengeluaran berdasarkan tanggal
+          Map<String, double> groupedExpenses =
+              _groupExpensesByDate(filteredExpenses);
+
+          // Ubah data menjadi FlSpot untuk LineChart
+          List<FlSpot> spots = _convertGroupedExpensesToSpots(groupedExpenses);
+
           return RefreshIndicator(
-            onRefresh: () async => controller.fetchExpenses(),
-            child: const SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Center(child: Text('No expenses found')),
+            onRefresh: () async {
+              controller.fetchExpenses();
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Container(
+                    width: 375,
+                    decoration: const ShapeDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment(-0.06, -1.00),
+                        end: Alignment(0.06, 1),
+                        colors: [Color(0xFFFFF6E5), Color(0x00F7ECD7)],
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(32),
+                          bottomRight: Radius.circular(32),
+                        ),
+                      ),
+                    ),
+                    child: _buildAccountProfile(),
+                  ),
+                  // Dropdown Filter
+                  _buildDropdownFilter(selectedFilter),
+                  // Line Chart
+                  _buildLineChart(spots, groupedExpenses, previousDay),
+                  // Expense List
+                  _buildExpenseList(groupedExpenses),
+                ],
+              ),
             ),
           );
-        }
-
-        // Dapatkan daftar pengeluaran yang sudah difilter
-        List<Expense> filteredExpenses =
-            _filterExpensesByDate(selectedFilter.value);
-
-        // Kelompokkan pengeluaran berdasarkan tanggal
-        Map<String, double> groupedExpenses =
-            _groupExpensesByDate(filteredExpenses);
-
-        // Ubah data menjadi FlSpot untuk LineChart
-        List<FlSpot> spots = _convertGroupedExpensesToSpots(groupedExpenses);
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            controller.fetchExpenses();
-          },
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                // Dropdown Filter
-                _buildDropdownFilter(selectedFilter),
-                // Line Chart
-                _buildLineChart(spots, groupedExpenses, previousDay),
-                // Expense List
-                _buildExpenseList(groupedExpenses),
-              ],
-            ),
-          ),
-        );
-      }),
+        }),
+      ),
     );
   }
 
@@ -85,6 +116,35 @@ class HomeView extends GetView<HomeController> {
           );
         }).toList(),
       ),
+    );
+  }
+
+  Row _buildAccountProfile() {
+    return Row(
+      children: [
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(80),
+            border: Border.all(color: violet100, width: 2),
+          ),
+          child: const CustomImageAsset(image: 'onboarding1'),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Username", style: regular3.copyWith(color: light20)),
+              Text("${controller.user?.name}",
+                  style: title2.copyWith(color: dark75)),
+            ],
+          ),
+        )
+      ],
     );
   }
 

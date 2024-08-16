@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import '../theme/font.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({
-    super.key,
-    required this.controller,
-    this.text = "",
-    this.hint,
-    this.focusNode,
-    this.validator,
-    this.onEditingComplete,
-    this.onChanged,
-    this.obsecureText = false,
-    this.isPassword = false,
-    this.changeVisibilityPassword,
-    this.readOnly = false,
-    this.suffixIcon
-  });
+  const CustomTextField(
+      {super.key,
+      required this.controller,
+      this.text = "",
+      this.hint,
+      this.focusNode,
+      this.validator,
+      this.onEditingComplete,
+      this.onChanged,
+      this.obsecureText = false,
+      this.isPassword = false,
+      this.changeVisibilityPassword,
+      this.readOnly = false,
+      this.inputKeyboardType,
+      this.suffixIcon});
   final TextEditingController controller;
   final String text;
   final String? hint;
@@ -26,6 +26,7 @@ class CustomTextField extends StatelessWidget {
   final void Function(String?)? onChanged;
   final bool readOnly;
 
+  final TextInputType? inputKeyboardType;
   final void Function()? onEditingComplete;
   final void Function()? changeVisibilityPassword;
   final Widget? suffixIcon;
@@ -44,6 +45,7 @@ class CustomTextField extends StatelessWidget {
           height: 16,
         ),
         TextFormField(
+          keyboardType: inputKeyboardType,
           controller: controller,
           readOnly: readOnly,
           autovalidateMode: AutovalidateMode.always,
@@ -52,7 +54,6 @@ class CustomTextField extends StatelessWidget {
           focusNode: focusNode,
           validator: validator,
           onChanged: onChanged,
-
           decoration: InputDecoration(
             hintText: hint ?? "",
             suffixIcon: isPassword

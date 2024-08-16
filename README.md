@@ -1,18 +1,18 @@
 # montra
 
-A new Flutter project.
+Montra, sebagai aplikasi yang kamu buat untuk pelacak pengeluaran (expense tracker), berfungsi untuk membantu pengguna mencatat, mengelola, dan memantau pengeluaran mereka secara efisien
 
-## Getting Started
+---
 
-[![Codemagic build status](https://api.codemagic.io/apps/66bc0e207eed6250b780fa70/66bc0e207eed6250b780fa6f/status_badge.svg)](https://codemagic.io/app/66bc0e207eed6250b780fa70/66bc0e207eed6250b780fa6f/latest_build)
+This app is implementation from this design[ figma](https://www.figma.com/community/file/998557875473123405/montra-expense-tracker-ui-kit "design ") , Thanks to Braja Omar Justico create this beautiful app design.
 
-This project is a starting point for a Flutter application.
+**Splash Screen**
 
-A few resources to get you started if this is your first Flutter project:
+![Splash Screen](image/README/splash.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## **Login Screen**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## **PIN Screen**
+
+![1723752980756](image/README/1723752980756.png)
